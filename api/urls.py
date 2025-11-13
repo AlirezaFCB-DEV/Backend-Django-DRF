@@ -1,6 +1,6 @@
 from django.urls import path , include
 from rest_framework.routers import DefaultRouter
-from . import Profile_View_Set
+from .views import Profile_View_Set
 
 app_name = "api"
 
