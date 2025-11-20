@@ -7,7 +7,7 @@ from .models import Snippet
 #     linenos = serializers.BooleanField(required=False)
 #     language = serializers.CharField()
 #     style = serializers.CharField()
-    
+
 #     def create(self , validated_data) :
 #         """
 #         Create and return a new `Snippet` instance, given the validated data.
@@ -16,7 +16,7 @@ from .models import Snippet
 #         :return: A new `Snippet` instance
 #         """
 #         return Snippet.objects.create(**validated_data)
-    
+
 #     def update(self , instance  , validated_data) :
 #         instance.title = validated_data.get("title" , instance.title)
 #         instance.code = validated_data.get("code" , instance.code)
@@ -26,7 +26,8 @@ from .models import Snippet
 #         instance.save()
 #         return instance
 
-class Snippet_Serializer(serializers.ModelSerializer) :
-    model = Snippet
-    fields = ["id" , "title" , "code" , "linenos" , "language" , "style"]
-    
+
+class Snippet_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Snippet
+        fields = ["id", "title", "code", "linenos", "language", "style"]
