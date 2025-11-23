@@ -1,12 +1,12 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Snippet
 from .serializer import Snippet_Serializer
 
 # Create your views here.
 
-@csrf_exempt
+@api_view(["GET" , "POST"])
 def snippet_list(req) :
     """
     List all code snippets or create a new one.
@@ -30,38 +30,36 @@ def snippet_list(req) :
     if  req.method == "GET" :
         snippets = Snippet.objects.all()
         serializer = Snippet_Serializer(snippets , many=True)
-        return JsonResponse(serializer.data , safe=False)
+        return Response(serializer.data)
     
     elif req.method == "POST" :
-        data = JSONParser().parse(req)
-        serializer = Snippet_Serializer(data=data)
+        serializer = Snippet_Serializer(data=req.data)
         if  serializer.is_valid() :
             serializer.save()
-            return JsonResponse(serializer.data , status=201)
-        return JsonResponse(serializer.errors , status = 400)
+            return Response(serializer.data , status=status.HTTP_201_CREATED)
+        return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
     
-@csrf_exempt
+@api_view(["GET" , "PUT" , "DELETE"])
 def snippet_detail(req , pk):
     try :
         snippet = Snippet.objects.get(pk=pk)
     except Snippet.DoesNotExist :
-        return JsonResponse({"error" : "Snippet Not Found!!"} , status=404)
+        return Response({"error" : "Snippet Not Found!!"} , status=status.HTTP_404_NOT_FOUND)
     
     if req.method == "GET":
         serializer = Snippet_Serializer(snippet)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     
     elif req.method == "PUT" :
-        data = JSONParser().parse(req)
-        serializer = Snippet_Serializer(snippet, data=data)
+        serializer = Snippet_Serializer(snippet, data=req.data)
         if serializer.is_valid() :
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors , status=400)
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
     
     elif req.method == "DELETE":
         snippet.delete()
-        return JsonResponse({"msg" : "snippet successfully deleted!!"} , status= 204)
+        return Response({"msg" : "snippet successfully deleted!!"} , status=status.HTTP_204_NO_CONTENT)
     
     
         
