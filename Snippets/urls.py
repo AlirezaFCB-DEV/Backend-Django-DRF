@@ -6,6 +6,8 @@ app_name = "Snippets"
 urlpatterns = [
     path("snippets/" , views.Snippet_List.as_view()),
     path("snippets/<int:pk>/" , views.Snippet_Detail.as_view()),
+    path("users/" , views.User_List.as_view()),
+    path("users/<int:pk>/" , views.User_Detail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
