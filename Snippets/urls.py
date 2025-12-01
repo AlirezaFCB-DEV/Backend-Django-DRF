@@ -8,5 +8,6 @@ router.register(r"snippets" , views.Snippet_ViewSet)
 router.register(r"users" , views.User_ViewSet)
 
 urlpatterns = [
+    path("" , views.api_root),
     path("" , include(router.urls)),
 ]
