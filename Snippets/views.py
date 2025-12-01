@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets , renderers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -22,6 +22,11 @@ class Snippet_ViewSet(viewsets.ModelViewSet) :
     queryset = Snippet.objects.all()
     serializer_class = Snippet_Serializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @action(detail=True, renderer_classes = [renderers.StaticHTMLRenderer])
+    def highlight(self, req , *args , **kwargs) :
+        snippet = self.get_object()
+        return Response(snippet.code)
 
     def perform_create(self, serializer):
         return serializer.save(owner=self.request.user)
